@@ -3,18 +3,28 @@ import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
+type Character_Image = {
+  storage_path:string;
+  image_type:string;
+}
+
 type Character = {
-  id: number;
+  id: string;
   name: string;
   description: string;
-  image_path: string | null;
+  character_images:Character_Image[];
 };
 
 export default async function Home() {
   const { data, error } = await supabase
     .from("characters")
-    .select("id, name, description, image_path")
-    .eq("is_published", true)
+    .select(`
+      id,
+      name,
+      description,
+      character_images!inner(storage_path,image_type)
+    `)
+    .eq("character_images.image_type","main")
     .order("id", { ascending: true });
 
   if (error) {
@@ -45,12 +55,13 @@ export default async function Home() {
                 key={character.id}
                 className="rounded-3xl bg-slate-900 p-6"
               >
-                {character.image_path && (
+                {character.character_images[0].storage_path!=null && (
                   <Image
-                    src={character.image_path}
+                    src={character.character_images[0].storage_path}
                     alt={`${character.name}の画像`}
                     width={600}
                     height={600}
+                    loading="eager"
                     className="mb-6 h-80 w-full rounded-2xl object-contain"
                   />
                 )}
