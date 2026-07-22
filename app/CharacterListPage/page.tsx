@@ -1,5 +1,6 @@
 ﻿import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import CharacterSearch from "@/Components/CharacterSearch";
 
 export const dynamic = "force-dynamic";
 
@@ -45,15 +46,14 @@ export default async function Home() {
         <h1 className="mb-10 text-4xl font-bold">
           Characters
         </h1>
-
         {characters.length === 0 ? (
           <p>公開中のキャラクターはいません。</p>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-3">
             {characters.map((character) => (
               <article
                 key={character.id}
-                className="rounded-3xl bg-slate-900 p-6"
+                className="rounded-3xl bg-slate-600 p-6"
               >
                 {character.character_images[0].storage_path!=null && (
                   <Image
@@ -62,15 +62,15 @@ export default async function Home() {
                     width={600}
                     height={600}
                     loading="eager"
-                    className="mb-6 h-80 w-full rounded-2xl object-contain"
+                    className="mb-8 h-70 w-full rounded-xl object-contain"
                   />
                 )}
 
-                <h2 className="mb-3 text-3xl font-bold">
+                <h2 className="mb-3 text-xl font-bold">
                   {character.name}
                 </h2>
 
-                <p className="leading-7 text-slate-300">
+                <p className="leading-4 text-slate-300">
                   {character.description}
                 </p>
               </article>
